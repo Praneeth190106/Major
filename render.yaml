@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: quantumshield
+    runtime: node
+    region: singapore
+    plan: free
+    rootDir: .
+    buildCommand: "cd frontend && npm install && npm run build && cd ../backend && npm install"
+    startCommand: "node backend/server.js"
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        generateValue: false
+      - key: WHATISMYIP_API_KEY
+        value: 54ac597355e19c1e88da56f5b0aac726

@@ -1,0 +1,13 @@
+{
+  "name": "quantumshield-root",
+  "version": "1.0.0",
+  "description": "QuantumShield – Context-Aware Post-Quantum Cryptography Orchestration Engine",
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build",
+    "start": "node backend/server.js",
+    "install:all": "cd backend && npm install && cd ../frontend && npm install"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

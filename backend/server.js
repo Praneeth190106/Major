@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { runOsintScan } = require('./controllers/osintController');
 const { getSystemBattery } = require('./controllers/systemController');
 const { 
@@ -27,6 +28,8 @@ app.use(cors());
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
 
+// ── API Routes (must be declared BEFORE the static file catch-all) ──
+
 // System Battery Telemetry Route
 app.get('/api/system/battery', getSystemBattery);
 
@@ -50,6 +53,17 @@ app.get('/api/alerts', getAlerts);
 app.delete('/api/alerts/clear', clearAlerts);
 app.post('/api/alerts/notify', receiveAlert);
 app.get('/api/attack-log', getAttackLog);
+
+// ── Serve React Frontend (Production Build) ──
+// In production Render/cloud: serve the Vite-built frontend/dist folder.
+// In local dev: Vite runs its own dev server on :5173 with its own /api proxy.
+const frontendDist = path.join(__dirname, '..', 'frontend', 'dist');
+app.use(express.static(frontendDist));
+
+// SPA fallback: any non-API route serves index.html so React Router works
+app.get('*', (req, res) => {
+    res.sendFile(path.join(frontendDist, 'index.html'));
+});
 
 app.listen(PORT, HOST, () => {
     console.log(`=================================================`);
